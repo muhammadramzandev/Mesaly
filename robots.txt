@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /admin.html
+Disallow: /post.html
+
+Sitemap: https://www.mesaly.com/sitemap.xml

@@ -1,0 +1,33 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>MESALY Admin</title><link rel="icon" href="favicon.png"><link rel="stylesheet" href="style.css"><script src="config.js"></script></head>
+<body class="adm"><main class="w" style="padding:40px 0"><h1>MESALY Admin</h1><p id="msg" class="m" role="status"></p>
+<form id="login" class="card" style="max-width:420px;margin-top:20px"><div class="f"><label for="e">Email</label><input id="e" name="email" type="email" autocomplete="username" required></div><div class="f"><label for="p">Password</label><input id="p" name="password" type="password" autocomplete="current-password" required></div><button class="btn" type="submit">Sign in</button></form>
+<section id="app" hidden><div class="pills" id="tabs"></div><button class="btn s o" id="out" style="color:var(--t)">Sign out</button><div id="list"></div>
+<div id="ed" class="card" hidden style="margin-top:20px"><h3 id="et"></h3><p class="m">Edit the JSON below, then save.</p><textarea id="js" rows="14" aria-label="Document JSON"></textarea><div class="acts"><button class="btn s" id="save">Save</button><button class="btn s o" id="cancel" style="color:var(--t)">Cancel</button></div></div></section></main>
+<script type="module">
+const M=window.MESALY||{},$=s=>document.querySelector(s),msg=t=>$('#msg').textContent=t;
+if(!M.firebase){msg('Firebase is not configured. Add your Firebase config in config.js (see README.md).');$('#login').hidden=true}
+else{const V='10.12.0',B=`https://www.gstatic.com/firebasejs/${V}/`,A=await import(B+'firebase-app.js'),U=await import(B+'firebase-auth.js'),F=await import(B+'firebase-firestore.js');
+const app=A.initializeApp(M.firebase),auth=U.getAuth(app),db=F.getFirestore(app);
+const C={inquiries:null,messages:null,subscribers:null,
+ posts:{title:'',category:'Web Development',excerpt:'',body:'Paragraph one.\n\nParagraph two.',published:false},
+ projects:{title:'',category:'Websites',description:'',tech:'',more:'',demo:false,published:false},
+ testimonials:{name:'',role:'',company:'',quote:'',published:false}};
+let role='',col='',ref=null;
+$('#login').onsubmit=async e=>{e.preventDefault();try{await U.signInWithEmailAndPassword(auth,e.target.email.value,e.target.password.value)}catch{msg('Sign-in failed.')}};
+$('#out').onclick=()=>U.signOut(auth);$('#cancel').onclick=()=>$('#ed').hidden=true;
+U.onAuthStateChanged(auth,async u=>{if(!u){$('#login').hidden=false;$('#app').hidden=true;return}
+ const s=await F.getDoc(F.doc(db,'admins',u.uid));if(!s.exists()){msg('This account is not authorised for the admin panel.');await U.signOut(auth);return}
+ role=s.data().role;msg(`Signed in as ${u.email} (${role}).`);$('#login').hidden=true;$('#app').hidden=false;
+ $('#tabs').replaceChildren(...Object.keys(C).map(c=>{const b=document.createElement('button');b.className='pill';b.textContent=c;b.onclick=()=>show(c);return b}));show('inquiries')});
+function btn(t,f,o){const b=document.createElement('button');b.className='btn s'+(o?' o':'');if(o)b.style.color='var(--t)';b.textContent=t;b.onclick=f;return b}
+async function show(c){col=c;$('#ed').hidden=true;const L=$('#list');L.replaceChildren();
+ if(C[c])L.append(btn('+ New '+c.slice(0,-1),()=>edit(null,C[c])));
+ try{const s=await F.getDocs(F.collection(db,c));if(!s.size)L.append(Object.assign(document.createElement('p'),{textContent:'No documents yet.',className:'m'}));
+ s.docs.forEach(x=>{const r=document.createElement('div');r.className='card row';const p=document.createElement('pre');const d=x.data();p.textContent=JSON.stringify(d,null,1);const a=document.createElement('div');a.className='acts';a.style.margin='0';
+ if(C[c]||role==='admin')a.append(btn('Edit',()=>{const e={...d};delete e.createdAt;edit(x.ref,e)},1));
+ if(role==='admin')a.append(btn('Delete',async()=>{if(confirm('Delete this document?')){await F.deleteDoc(x.ref);show(c)}},1));r.append(p,a);L.append(r)})}
+ catch{L.append(Object.assign(document.createElement('p'),{textContent:'You do not have permission to view this collection.',className:'m'}))}}
+function edit(r,d){ref=r;$('#et').textContent=(r?'Edit ':'New ')+col;$('#js').value=JSON.stringify(d,null,2);$('#ed').hidden=false}
+$('#save').onclick=async()=>{let d;try{d=JSON.parse($('#js').value)}catch{msg('Invalid JSON.');return}
+ try{if(ref)await F.setDoc(ref,d,{merge:true});else await F.addDoc(F.collection(db,col),{...d,createdAt:F.serverTimestamp()});msg('Saved.');show(col)}catch{msg('Save failed — check your permissions.')}}}
+</script></body></html>
