@@ -2,7 +2,7 @@
 """MESALY site generator. Edit SITE below, then run: python3 build.py  (regenerates all .html, sitemap.xml, robots.txt)"""
 import os, json, html
 ROOT = os.path.dirname(os.path.abspath(__file__))
-SITE = 'https://www.mesaly.com'   # <- change to your real domain
+SITE = 'https://mesaly.netlify.app'   # <- change to your real domain
 TAG = 'Building Digital Solutions. Empowering Businesses.'
 def w(n, t): open(os.path.join(ROOT, n), 'w', encoding='utf-8').write(t)
 def E(s): return html.escape(s, quote=True)
