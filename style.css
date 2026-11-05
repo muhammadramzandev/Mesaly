@@ -50,7 +50,7 @@ details{border:1px solid var(--l);border-radius:14px;padding:16px 20px;margin-bo
 footer{background:var(--n);color:#b9c3e6;padding:72px 0 28px;font-size:.93rem}footer h4{color:#fff;margin-bottom:14px}footer li{margin-bottom:8px}footer a:hover{color:#fff}
 .fgd{display:grid;grid-template-columns:1.6fr 1fr 1fr 1.5fr;gap:36px}.fgd .lg{color:#fff}.fgd .lg img{background:#fff;border-radius:10px;padding:4px}.cp{border-top:1px solid rgba(255,255,255,.1);margin-top:40px;padding-top:22px;font-size:.85rem}
 .nl{display:flex;gap:8px;align-items:flex-start}.nl .f{margin:0;flex:1}
-.wa{position:fixed;right:20px;bottom:20px;z-index:60;width:58px;height:58px;border-radius:50%;background:#25d366;display:grid;place-items:center;box-shadow:0 12px 30px -8px rgba(37,211,102,.7);transition:.25s}.wa:hover{transform:scale(1.08)}.wa svg{width:30px;height:30px;fill:#fff}
+.wa{position:fixed;left:20px;bottom:20px;z-index:60;width:58px;height:58px;border-radius:50%;background:#25d366;display:grid;place-items:center;box-shadow:0 12px 30px -8px rgba(37,211,102,.7);transition:.25s}.wa:hover{transform:scale(1.08)}.wa svg{width:30px;height:30px;fill:#fff}
 #pre{position:fixed;inset:0;z-index:100;background:#fff;display:grid;place-items:center;transition:opacity .5s,visibility .5s}#pre.off{opacity:0;visibility:hidden}#pre img{height:84px;animation:pl 1.2s ease-in-out infinite}
 .js .rv{opacity:0;transform:translateY(24px);transition:opacity .7s,transform .7s}.js .rv.in{opacity:1;transform:none}
 dialog{border:0;border-radius:20px;padding:28px;max-width:520px;width:92%;margin:auto}dialog::backdrop{background:rgba(10,18,48,.6)}dialog p{margin-top:10px}
